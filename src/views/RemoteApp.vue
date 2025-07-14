@@ -141,12 +141,15 @@ export default {
           : ''
         
         // Set the iframe URL based on the app name
+        const usersAppUrl = process.env.VUE_APP_USERSAPP_URL || 'http://localhost:3001';
+        const editUserAppUrl = process.env.VUE_APP_EDITUSERAPP_URL || 'http://localhost:3002';
+
         if (this.appName === 'usersApp') {
-          this.iframeUrl = `http://localhost:3001${queryString}`
-          console.log(`[RemoteApp] Loading users app in iframe: ${this.iframeUrl}`)
+          this.iframeUrl = `${usersAppUrl}${queryString}`;
+          console.log(`[RemoteApp] Loading users app in iframe: ${this.iframeUrl}`);
         } else if (this.appName === 'editUserApp') {
-          this.iframeUrl = `http://localhost:3002${queryString}`
-          console.log(`[RemoteApp] Loading edit user app in iframe: ${this.iframeUrl}`)
+          this.iframeUrl = `${editUserAppUrl}${queryString}`;
+          console.log(`[RemoteApp] Loading edit user app in iframe: ${this.iframeUrl}`);
         } else {
           throw new Error(`Unknown app: ${this.appName}`)
         }

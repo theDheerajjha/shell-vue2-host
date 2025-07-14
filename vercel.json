@@ -34,7 +34,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "env": {
-    "USERSAPP_URL": "https://users-app-vue3-three.vercel.app",
-    "EDITUSERAPP_URL": "https://edit-user-app-vue3-pied.vercel.app"
+    "VUE_APP_USERSAPP_URL": "https://users-app-vue3-three.vercel.app",
+    "VUE_APP_EDITUSERAPP_URL": "https://edit-user-app-vue3-pied.vercel.app"
   }
 } 
