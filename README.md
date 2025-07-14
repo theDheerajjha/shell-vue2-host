@@ -2,6 +2,9 @@
 
 **A modular frontend platform where a Vue 2 shell dynamically loads Vue 3 remote applications using Module Federation.**
 
+<img width="950" height="404" alt="image" src="https://github.com/user-attachments/assets/32e94d42-a91a-441a-93ca-a38b894802d6" />
+
+
 ## Local Setup
 
 ```bash
