@@ -20,6 +20,10 @@
       }
     },
     {
+      "src": "/(.*\\..*)",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html",
       "headers": {
@@ -30,7 +34,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "env": {
-    "USERSAPP_URL": "@usersapp_url",
-    "EDITUSERAPP_URL": "@edituserapp_url"
+    "USERSAPP_URL": "https://users-app-vue3-three.vercel.app",
+    "EDITUSERAPP_URL": "https://edit-user-app-vue3-pied.vercel.app"
   }
 } 
