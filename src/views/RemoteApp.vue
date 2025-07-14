@@ -4,24 +4,17 @@
       <div class="loading-spinner"></div>
       <p>{{ i18n.t('common.loading') }}</p>
     </div>
-    
+
     <div class="error-container" v-else-if="error">
       <h3>{{ i18n.t('common.error') }}</h3>
       <p>{{ error }}</p>
       <button @click="retryLoad" class="btn-retry">Retry</button>
     </div>
-    
+
     <div v-else class="remote-component-wrapper">
       <!-- Use iframe to load Vue 3 app -->
-      <iframe 
-        v-if="iframeUrl"
-        :key="iframeKey"
-        :src="iframeUrl"
-        class="remote-iframe"
-        frameborder="0"
-        @load="onIframeLoad"
-        @error="onIframeError"
-      ></iframe>
+      <iframe v-if="iframeUrl" :key="iframeKey" :src="iframeUrl" class="remote-iframe" frameborder="0"
+        @load="onIframeLoad" @error="onIframeError"></iframe>
     </div>
   </div>
 </template>
@@ -65,8 +58,8 @@ export default {
     // Create a stable key for the iframe to prevent unnecessary reloads
     currentRouteKey() {
       const query = this.$route.query
-      const queryString = Object.keys(query).length > 0 
-        ? '?' + new URLSearchParams(query).toString() 
+      const queryString = Object.keys(query).length > 0
+        ? '?' + new URLSearchParams(query).toString()
         : ''
       return `${this.appName}${queryString}`
     }
@@ -131,19 +124,20 @@ export default {
       this.error = null
       this.iframeLoaded = false
       this.lastSentData = null
-      
+
       try {
         console.log(`[RemoteApp] loadRemoteApp called for appName: ${this.appName}`)
         // Get current route query parameters
         const queryParams = this.$route.query
-        const queryString = Object.keys(queryParams).length > 0 
-          ? '?' + new URLSearchParams(queryParams).toString() 
+        const queryString = Object.keys(queryParams).length > 0
+          ? '?' + new URLSearchParams(queryParams).toString()
           : ''
-        
+
         // Set the iframe URL based on the app name
         const usersAppUrl = process.env.VUE_APP_USERSAPP_URL || 'http://localhost:3001';
         const editUserAppUrl = process.env.VUE_APP_EDITUSERAPP_URL || 'http://localhost:3002';
-
+        console.log("usersAppUrl", usersAppUrl)
+        console.log("editUserAppUrl", editUserAppUrl)
         if (this.appName === 'usersApp') {
           this.iframeUrl = `${usersAppUrl}${queryString}`;
           console.log(`[RemoteApp] Loading users app in iframe: ${this.iframeUrl}`);
@@ -153,10 +147,10 @@ export default {
         } else {
           throw new Error(`Unknown app: ${this.appName}`)
         }
-        
+
         // Increment iframe key to force reload only when necessary
         this.iframeKey++
-        
+
         this.loading = false
       } catch (err) {
         console.error('[RemoteApp] Failed to load remote app:', err)
@@ -164,20 +158,20 @@ export default {
         this.loading = false
       }
     },
-    
+
     onIframeLoad() {
       console.log('[RemoteApp] Iframe loaded successfully')
       this.iframeLoaded = true
       // Set up communication after iframe is loaded
       this.setupIframeCommunication()
     },
-    
+
     onIframeError() {
       console.error('Iframe failed to load')
       this.error = `Failed to load ${this.appName} in iframe`
       this.iframeLoaded = false
     },
-    
+
     setupIframeCommunication() {
       // Set up communication between Vue 2 shell and Vue 3 iframe
       const iframe = this.$el.querySelector('iframe')
@@ -222,7 +216,7 @@ export default {
                 'editUser.validation.roleRequired': this.i18n.t('editUser.validation.roleRequired')
               }
             }
-            
+
             iframe.contentWindow.postMessage(message, '*')
             this.lastSentData = JSON.stringify(message)
             console.log('[RemoteApp] Sent INIT_DATA to iframe:', message)
@@ -230,7 +224,7 @@ export default {
             console.error('[RemoteApp] Failed to send data to iframe:', err)
           }
         }, 1000)
-        
+
         // Listen for messages from iframe
         window.addEventListener('message', (event) => {
           if (event.source === iframe.contentWindow) {
@@ -238,11 +232,11 @@ export default {
             this.handleIframeMessage(event.data)
           }
         })
-        
+
         console.log('[RemoteApp] Iframe communication setup complete')
       }
     },
-    
+
     handleIframeMessage(data) {
       // Handle messages from the Vue 3 iframe
       switch (data.type) {
@@ -287,13 +281,13 @@ export default {
           console.log('Unknown message type from iframe:', data.type)
       }
     },
-    
+
     sendStoreUpdateToIframe() {
       // Clear any existing timeout
       if (this.updateTimeout) {
         clearTimeout(this.updateTimeout)
       }
-      
+
       // Debounce the update to prevent rapid successive calls
       this.updateTimeout = setTimeout(() => {
         const iframe = this.$el.querySelector('iframe')
@@ -308,7 +302,7 @@ export default {
                 selectedUser: this.store.selectedUser || null
               }
             }
-            
+
             // Only send if data has actually changed to prevent unnecessary updates
             const messageString = JSON.stringify(message)
             if (messageString !== this.lastSentData) {
@@ -322,7 +316,7 @@ export default {
         }
       }, 100) // 100ms debounce
     },
-    
+
     retryLoad() {
       this.loadRemoteApp()
     }
@@ -355,8 +349,13 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error-container {
@@ -394,4 +393,4 @@ export default {
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-</style> 
+</style>
