@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import remoteUrls from '../remoteUrl.config.json';
+
 export default {
   name: 'RemoteApp',
   props: {
@@ -134,15 +136,10 @@ export default {
           : ''
 
         // Set the iframe URL based on the app name
-        const usersAppUrl = process.env.VUE_APP_USERSAPP_URL || 'http://localhost:3001';
-        const editUserAppUrl = process.env.VUE_APP_EDITUSERAPP_URL || 'http://localhost:3002';
-        if (process.env.NODE_ENV === 'production') {
-          if (!process.env.VUE_APP_USERSAPP_URL || !process.env.VUE_APP_EDITUSERAPP_URL) {
-            console.warn('[RemoteApp] WARNING: Production build is missing VUE_APP_USERSAPP_URL or VUE_APP_EDITUSERAPP_URL. Falling back to localhost.');
-          }
-        }
-        console.log("usersAppUrl", usersAppUrl)
-        console.log("editUserAppUrl", editUserAppUrl)
+        const usersAppUrl = remoteUrls.usersApp;
+        const editUserAppUrl = remoteUrls.editUserApp;
+        console.log('usersAppUrl', usersAppUrl);
+        console.log('editUserAppUrl', editUserAppUrl);
         if (this.appName === 'usersApp') {
           this.iframeUrl = `${usersAppUrl}${queryString}`;
           console.log(`[RemoteApp] Loading users app in iframe: ${this.iframeUrl}`);
